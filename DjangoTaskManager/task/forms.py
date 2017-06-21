@@ -22,6 +22,7 @@ class EditTaskForm(ModelForm):
     class Meta:
         model = Task
         fields = [
-        'assignee',
-        'name',
-        'description']
+            'assignee',
+            'name',
+            'description',
+            'completed']

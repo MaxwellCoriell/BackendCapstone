@@ -90,7 +90,8 @@ def edit(request, task_id):
      which contains a very specific view
      for editing a singular task
      For an example, visit /edit/1/ to see a view on the first task created
-     displaying title, description, assignee, and whether or not it's been completed. 
+     displaying title, description, assignee, 
+     and whether or not it's been completed. 
 
      Author: Max Baldridge 
 
@@ -99,16 +100,31 @@ def edit(request, task_id):
 
      Returns: (render): a view of the request, template to use, and product obj
      """
-    try:
-        task = Task.objects.get(id=task_id)
-    except Task.DoesNotExist:
-        raise Http404
+    if request.method == 'POST':
+        form = EditTaskForm(
+            instance=Task.objects.get(id=task_id),
+            data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('all_tasks'))
+        return TemplateResponse(
+            request,
+            'edit_task.html',
+            {'errors': form.errors})
 
-    form = EditTaskForm(instance=task)
-    return TemplateResponse(
-        request,
-        'edit_task.html',
-        {'form': form, 'edit': True})
+    else:
+        try:
+            task = Task.objects.get(id=task_id)
+        except Task.DoesNotExist:
+            raise Http404
+
+        form = EditTaskForm(instance=task)
+        return TemplateResponse(
+            request,
+            'edit_task.html',
+            {'form': form,
+                'edit': True,
+                'task_id':task_id})
 
 
 @login_required
