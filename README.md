@@ -4,7 +4,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-A task manager application that allows users
+A task manager application that allows users to create and assign tasks for themselves or other users. As well as being able to delete, and edit, and mark as complete each task.
 
 ## Table of Contents
 
