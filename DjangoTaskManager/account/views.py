@@ -10,6 +10,15 @@ from DjangoTaskManager.account.forms import RegistrationForm
 
 
 def account_login(request):
+    """
+    Purpose: Handles the creation of a new user for authentication
+
+    Author: Max Baldridge
+
+    Arguments: request -- the full HTTP request object
+
+    Returns: n/a
+    """
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -23,11 +32,22 @@ def account_login(request):
 
 @login_required
 def account_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
     logout(request)
+    # Take the user back to the login.
     return HttpResponseRedirect(reverse('login'))
 
 
 def account_register(request):
+    """
+    Purpose: Handles the creation of a new user for authentication
+
+    Author: Max Baldridge
+
+    Arguments: request -- the full HTTP response object
+
+    Returns: n/a
+    """
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
         if form.is_valid():

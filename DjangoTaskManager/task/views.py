@@ -12,9 +12,12 @@ from DjangoTaskManager.task.models import Task
 def all_tasks(request):
     """
     Purpose: this displays all tasks created by users
+
     Author: Max Baldridge
-    Arguments: Request
-    Returns: all tasks created by the users
+
+    Arguments: Request -- the full HTTP request object
+
+    Returns: all tasks created by all registered users
     """
     hide_completed = request.GET.get('hide_completed', False)
     tasks = Task.objects.all()
@@ -29,10 +32,13 @@ def all_tasks(request):
 @login_required
 def add(request):
     """
-    Purpose: this allows a user to add a task
+    Purpose: to present the user with a form to upload information about a task to complete
+
     Author: Max Baldridge
-    Arguments: Request
-    Returns: a created task by a specific user
+
+    Arguments: Request -- the full HTTP request object
+
+    Returns: (TemplateResponse): A form that lets the user upload a a task to complete
     """
     if request.method == 'POST':
         form = AddTaskForm(request.POST)
@@ -52,6 +58,21 @@ def add(request):
 
 @login_required
 def mark_done(request, task_id):
+    """
+     Purpose: Allows user to mark a task as completed, whether editing it,
+     or viewing it in the complete list of tasks.
+     Checks to see if a specific task id appears, 
+     and if it does to complete the task.
+     If no id is found for the task, the raises a 404 [not found] error
+
+     Author: Max Baldridge
+
+     Arguments: Request -- the full HTTP request object
+                task_id: (integer): id of task we are marking as complete
+
+     Returns: (HttpResponseRedirect):
+        the view of all tasks, with the current task as all
+     """
     try:
         task = Task.objects.get(id=task_id)
         task.completed = True
@@ -64,17 +85,45 @@ def mark_done(request, task_id):
 
 @login_required
 def edit(request, task_id):
+    """
+     Purpose: Allows user to view the edit view, 
+     which contains a very specific view
+     for editing a singular task
+     For an example, visit /edit/1/ to see a view on the first task created
+     displaying title, description, assignee, and whether or not it's been completed. 
+
+     Author: Max Baldridge 
+
+     Arguments: Request -- the full HTTP request object
+                task_id: (integer): id of task we are editing
+
+     Returns: (render): a view of the request, template to use, and product obj
+     """
     try:
         task = Task.objects.get(id=task_id)
     except Task.DoesNotExist:
         raise Http404
 
     form = EditTaskForm(instance=task)
-    return TemplateResponse(request, 'edit_task.html', {'form': form, 'edit': True})
+    return TemplateResponse(
+        request,
+        'edit_task.html',
+        {'form': form, 'edit': True})
 
 
 @login_required
 def delete(request, task_id):
+    """
+     Purpose: Allows user to delete a single task,
+     thus removing it from the list of all user tasks.
+
+     Author: Max Baldridge
+
+     Arguments: Request -- the full HTTP request object
+                task_id: (integer): id of task we are removing
+
+     Returns: (render): a view of the request, template to use, and product obj
+     """
     try:
         Task.objects.get(id=task_id).delete()
     except Task.DoesNotExist:
