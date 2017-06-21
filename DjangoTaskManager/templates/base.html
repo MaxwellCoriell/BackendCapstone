@@ -7,9 +7,10 @@
     <body>
         <div class="container" style="margin-top: 10px">
             {% if request.user.is_authenticated %}
+                <a class="btn btn-default pull-center" href="{% url "tasks" %}">Home</a>
                 <a class="btn btn-default pull-right" href="{% url "logout" %}">Logout</a>
             {% endif %}
-            <h1>Task Manager</h1>
+            <h1><u>Task Manager</u></h1>
         {% block content %}{% endblock %}
         </div>
     </body>
