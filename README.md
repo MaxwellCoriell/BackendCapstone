@@ -43,10 +43,11 @@ cd DjangoTaskManager/DjangoTaskManager
 Setting up the database:
 
 ```
-python manage.py makemigrations
+chmod +x ./migrate_Django.sh 
 ```
+(^after running this the first time, there is no need to run it again^)
 ```
-python manage.py migrate
+./migrate_Django.sh
 ```
 Run project in browser:
 
