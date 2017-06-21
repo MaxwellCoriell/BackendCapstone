@@ -20,7 +20,7 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url='/tasks/')),
+    url(r'^$', RedirectView.as_view(url='/tasks/'), name='tasks'),
     url(r'^admin/', admin.site.urls),
     url(r'^tasks/', include('DjangoTaskManager.task.urls')),
     url(r'^account/', include('DjangoTaskManager.account.urls')),
