@@ -1,3 +1,11 @@
+# Basic migrations, database, and MacOS
+*.pyc
+bin
+*.DS_Store
+obj
+*.sqlite3
+*/migrations/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
