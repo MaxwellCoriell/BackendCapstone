@@ -32,15 +32,23 @@
                         {% else %}
                             <tr>
                         {% endif %}
-                            <td class="text-center">{{ task.name }}</td>
-                            <td class="text-center">{{ task.assignee.username }}</td>
-                            <td class="text-center">{{ task.created_by.username }}</td>
-                            <td class="text-center">{{ task.created }}</td>
+                            <td class="text-center">
+                                <a href="{% url "single_task" task.id %}">{{ task.name }}</a>
+                            </td>
+                            <td class="text-center">
+                                {{ task.assignee.username }}
+                            </td>
+                            <td class="text-center">
+                                {{ task.created_by.username }}
+                            </td>
+                            <td class="text-center">
+                                {{ task.created }}
+                            </td>
                             <td class="text-center">
                                 {% if not task.completed %}
                                     <a class="btn btn-success" href="{% url "task_mark_done" task.id %}">Mark Done</a>
                                 {% endif %}
-                                <a class="btn btn-default" href="{% url "task_edit" task.id %}">Edit</a>
+                                    <a class="btn btn-default" href="{% url "task_edit" task.id %}">Edit</a>
                                 {% if not task.deleted %}
                                     <a class="btn btn-danger" href="{% url "task_delete" task.id %}">Delete</a>
                                 {% endif %}
