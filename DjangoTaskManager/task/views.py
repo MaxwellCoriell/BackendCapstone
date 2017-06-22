@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.urls import reverse
 
@@ -17,7 +19,7 @@ def all_tasks(request):
 
     Arguments: Request -- the full HTTP request object
 
-    Returns: all tasks created by all registered users
+    Returns: (TemplateResponse): all tasks created by all registered users
     """
     hide_completed = request.GET.get('hide_completed', False)
     tasks = Task.objects.all()
@@ -32,13 +34,15 @@ def all_tasks(request):
 @login_required
 def add(request):
     """
-    Purpose: to present the user with a form to upload information about a task to complete
+    Purpose: to present the user with a form
+    to upload information about a task to complete
 
     Author: Max Baldridge
 
     Arguments: Request -- the full HTTP request object
 
-    Returns: (TemplateResponse): A form that lets the user upload a a task to complete
+    Returns:
+        (TemplateResponse): Form that lets the user upload a a task to complete
     """
     if request.method == 'POST':
         form = AddTaskForm(request.POST)
@@ -51,7 +55,8 @@ def add(request):
             ).save()
             return HttpResponseRedirect(reverse('all_tasks'))
         else:
-            return TemplateResponse(request, 'edit_task.html', {'errors': form.errors})
+            return TemplateResponse(
+                request, 'edit_task.html', {'errors': form.errors})
     else:
         return TemplateResponse(request, 'edit_task.html', {})
 
@@ -59,20 +64,20 @@ def add(request):
 @login_required
 def mark_done(request, task_id):
     """
-     Purpose: Allows user to mark a task as completed, whether editing it,
-     or viewing it in the complete list of tasks.
-     Checks to see if a specific task id appears, 
-     and if it does to complete the task.
-     If no id is found for the task, the raises a 404 [not found] error
+    Purpose: Allows user to mark a task as completed, whether editing it,
+    or viewing it in the complete list of tasks.
+    Checks to see if a specific task id appears,
+    and if it does to complete the task.
+    If no id is found for the task, the raises a 404 [not found] error
 
-     Author: Max Baldridge
+    Author: Max Baldridge
 
-     Arguments: Request -- the full HTTP request object
+    Arguments:  Request -- the full HTTP request object
                 task_id: (integer): id of task we are marking as complete
 
-     Returns: (HttpResponseRedirect):
-        the view of all tasks, with the current task as all
-     """
+    Returns: 
+        (HttpResponseRedirect): the view of all tasks, with the current task as all
+    """
     try:
         task = Task.objects.get(id=task_id)
         task.completed = True
@@ -86,20 +91,21 @@ def mark_done(request, task_id):
 @login_required
 def edit(request, task_id):
     """
-     Purpose: Allows user to view the edit view, 
-     which contains a very specific view
-     for editing a singular task
-     For an example, visit /edit/1/ to see a view on the first task created
-     displaying title, description, assignee, 
-     and whether or not it's been completed. 
+    Purpose: Allows user to view the edit view,
+    which contains a very specific view
+    for editing a singular task
+    For an example, visit /edit/1/ to see a view on the first task created
+    displaying title, description, assignee,
+    and whether or not it's been completed.
 
-     Author: Max Baldridge 
+    Author: Max Baldridge
 
-     Arguments: Request -- the full HTTP request object
-                task_id: (integer): id of task we are editing
+    Arguments: Request -- the full HTTP request object
+            task_id: (integer): id of task we are editing
 
-     Returns: (render): a view of the request, template to use, and product obj
-     """
+    Returns: 
+        (TemplateResponse): a view of the request, template to use, and task obj
+    """
     if request.method == 'POST':
         form = EditTaskForm(
             instance=Task.objects.get(id=task_id),
@@ -124,22 +130,40 @@ def edit(request, task_id):
             'edit_task.html',
             {'form': form,
                 'edit': True,
-                'task_id':task_id})
+                'task_id': task_id})
+
+
+@login_required
+def single(request, task_id):
+    """
+    Purpose: Allows user to view the single_task view,
+    which contains a specific view for. singular task
+
+    Author: Max Baldridge
+
+    Arguments:  Request-- the full HTTP request object
+                task_id: (integer): id of the task being viewed
+
+    Returns: (render): a view of the
+    """
+    template_name = 'single.html'
+    task = get_object_or_404(Task, pk=task_id)
+    return render(request, template_name, {'task': task})
 
 
 @login_required
 def delete(request, task_id):
     """
-     Purpose: Allows user to delete a single task,
-     thus removing it from the list of all user tasks.
+    Purpose: Allows user to delete a single task,
+    thus removing it from the list of all user tasks.
 
-     Author: Max Baldridge
+    Author: Max Baldridge
 
-     Arguments: Request -- the full HTTP request object
+    Arguments:  Request -- the full HTTP request object
                 task_id: (integer): id of task we are removing
 
-     Returns: (render): a view of the request, template to use, and product obj
-     """
+    Returns: (TemplateResponse): a view of the request, template to use, and product obj
+    """
     try:
         Task.objects.get(id=task_id).delete()
     except Task.DoesNotExist:

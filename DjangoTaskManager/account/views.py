@@ -32,6 +32,15 @@ def account_login(request):
 
 @login_required
 def account_logout(request):
+    """
+    Purpose: Handles logging the user out from the system
+
+    Author: max Baldridge
+
+    Arguments: request -- the full hTTP response object
+
+    Returns: n/a
+    """
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
     # Take the user back to the login.
