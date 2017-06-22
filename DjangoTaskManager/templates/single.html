@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Single Task{% endblock %}
+
+{% block content %}
+<br>
+<div style="margin: 10px">
+	<dl style="font-size: 18px">
+		<dt>Title: </dt>
+			<dd>{{ task.name }}</dd>
+		<br>
+	    <dt>Description: </dt>
+	    	<dd>{{ task.description }}</dd>
+	    <br>
+	    <dt>Created by: </dt>
+	    	<dd>{{ task.created_by.username }}</dd>
+	    <br>
+	    <dt>Assigned to: </dt>
+	    	<dd>{{ task.assignee.username }}</dd>
+	    <br>
+	    <dt>Date Assigned: </dt>
+	    	<dd>{{ task.created }}</dd>
+	    <br>
+	    </li>
+	    {% if not task.completed %}
+	    <dt>
+		        <a class="btn btn-success" href="{% url "task_mark_done" task.id %}">Mark Done</a>
+		</dt>
+		{% endif %}
+	</dl>
+{% endblock %}
