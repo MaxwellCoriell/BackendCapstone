@@ -14,6 +14,7 @@ class RegistrationForm(Form):
         cleaned_data = super(RegistrationForm, self).clean()
 
         if cleaned_data.get('password') != cleaned_data.get('confirm_password'):
-            self._errors['password'] = ErrorList('The passwords you entered do not match')
+            self._errors['password'] = ErrorList(
+                'The passwords you entered do not match')
 
         return cleaned_data
