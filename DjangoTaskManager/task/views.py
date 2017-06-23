@@ -75,7 +75,7 @@ def mark_done(request, task_id):
     Arguments:  Request -- the full HTTP request object
                 task_id: (integer): id of task we are marking as complete
 
-    Returns: 
+    Returns:
         (HttpResponseRedirect): the view of all tasks, with the current task as all
     """
     try:
@@ -162,7 +162,8 @@ def delete(request, task_id):
     Arguments:  Request -- the full HTTP request object
                 task_id: (integer): id of task we are removing
 
-    Returns: (TemplateResponse): a view of the request, template to use, and product obj
+    Returns: 
+        (TemplateResponse): a view of the request, template to use, and product obj
     """
     try:
         Task.objects.get(id=task_id).delete()

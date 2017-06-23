@@ -14,4 +14,5 @@ class TaskAdmin(admin.ModelAdmin):
     raw_id_fields = ('assignee', )
     list_per_page = 50
 
+
 admin.site.register(Task, TaskAdmin)
